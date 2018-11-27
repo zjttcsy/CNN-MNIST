@@ -41,7 +41,7 @@ def max_pool_2x2(x):
                           strides=[1,2,2,1], padding="SAME")
 
 #第1层，卷积层
-#初始化W为[5,5,1,6]的张量，表示卷积核大小为5*5，1表示图像通道数，6表示卷积核个数即输出6个特征图
+#初始化W为[5,5,1,32]的张量，表示卷积核大小为5*5，1表示图像通道数，6表示卷积核个数即输出6个特征图
 W_conv1 = weight_variable([5,5,1,6])
 #初始化b为[6],即输出大小
 b_conv1 = bias_variable([6])
@@ -103,17 +103,6 @@ accuracy = tf.reduce_mean(tf.cast(correct_predict, "float"))
 
 saver = tf.train.Saver()
 
-#打印mnist数组(一个数字)，以数字形式显示
-def print_digit(digit_array):
-    array = digit_array
-    array[array>0] = 1
-    digitint = array.astype(int)
-    digit = digitint.reshape(28,28)
-    for i in range(28):
-        for j in range(28):
-            print(digit[i][j], end='')
-        print('')
-
 #开始训练模型，循环20000次，每次随机从训练集中抓取50幅图像
 def cnn_train():
     # 创建一个交互式Session
@@ -139,6 +128,20 @@ def mnist_test():
     print( "测试集验证结果:%g" % accuracy.eval(feed_dict={
         x:mnist.test.images, y_:mnist.test.labels, keep_prob:1.0}))
     sess.close()
+
+#打印mnist数组(一个数字)，以数字形式显示
+def print_digit(digit_array):
+    array = digit_array
+    array[array>0] = 1
+    digitint = array.astype(int)
+    digit = digitint.reshape(28,28)
+    for i in range(28):
+        for j in range(28):
+            if digit[i][j] == 0:
+                print(' ', end='')
+            else:
+                print('*', end='')
+        print('')
 
 #mnist测试集中取10个样本进行预测
 def predict_mnist_array():
